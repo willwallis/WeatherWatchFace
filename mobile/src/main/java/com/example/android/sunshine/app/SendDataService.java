@@ -1,4 +1,4 @@
-package com.example.willwallis.demowatchdata;
+package com.example.android.sunshine.app;
 
 import android.app.IntentService;
 import android.app.Service;
