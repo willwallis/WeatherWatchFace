@@ -352,17 +352,18 @@ public class MyWeatherWatchFace extends CanvasWatchFaceService {
             if (isInAmbientMode()) {
                 canvas.drawColor(Color.BLACK);
             } else {
-                canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
+                // Draw the background, scaled to fit and weather image if not in ambient mode.
+                if (mBackgroundScaledBitmap == null || mBackgroundScaledBitmap.getWidth() != bounds.width() || mBackgroundScaledBitmap.getHeight() != bounds.height())
+                {
+                    mBackgroundScaledBitmap = Bitmap.createScaledBitmap(mBackgroundBitmap,
+                            bounds.width(), bounds.height(), true /* filter */);
+                }
+
+                canvas.drawBitmap(mBackgroundScaledBitmap, 0, 0, null);
+
+                canvas.drawBitmap(mWeatherBitmap, mXPic, mYPic, null);
             }
 
-            // Draw the background, scaled to fit.
-            if (mBackgroundScaledBitmap == null || mBackgroundScaledBitmap.getWidth() != bounds.width() || mBackgroundScaledBitmap.getHeight() != bounds.height())
-            {
-                mBackgroundScaledBitmap = Bitmap.createScaledBitmap(mBackgroundBitmap,
-                        bounds.width(), bounds.height(), true /* filter */);
-            }
-
-            canvas.drawBitmap(mBackgroundScaledBitmap, 0, 0, null);
 
             // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
             mTime.setToNow();
@@ -373,10 +374,6 @@ public class MyWeatherWatchFace extends CanvasWatchFaceService {
             // Temp
             canvas.drawText(mHighTemp, mXHigh, mYTemp, mTextHigh);
             canvas.drawText(mLowTemp, mXLow, mYTemp, mTextLow);
-            canvas.drawBitmap(mWeatherBitmap, mXPic, mYPic, null);
-
-
-
 
         }
 
