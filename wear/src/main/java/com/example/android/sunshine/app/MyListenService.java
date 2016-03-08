@@ -15,7 +15,12 @@ import com.google.android.gms.wearable.WearableListenerService;
 public class MyListenService extends WearableListenerService {
     public final String LOG_TAG = MyListenService.class.getSimpleName();
     private static final String DATA_PATH = "/weather";
-    private static final String KEY_ONE = "high";
+    private static final String KEY_ONE = "weatherId";
+    private static final String KEY_TWO = "high";
+    private static final String KEY_THREE = "low";
+    private int weatherId = 0;
+    private double high = 0;
+    private double low = 0;
 
 
     @Override
@@ -29,12 +34,16 @@ public class MyListenService extends WearableListenerService {
                 String path = dataEvent.getDataItem().getUri().getPath();
                 Log.v(LOG_TAG,"The path is: " + path);
                 if (path.equals(DATA_PATH)){
-                    String theMessage = dataMap.getString(KEY_ONE);
-                    Log.v(LOG_TAG, theMessage);
+                    weatherId = dataMap.getInt(KEY_ONE);
+                    high = dataMap.getDouble(KEY_TWO);
+                    low = dataMap.getDouble(KEY_THREE);
+                    Log.v(LOG_TAG, "Weather: " + weatherId);
                     // Send data to UI
                     //Intent intent = new Intent("update-main-activity");
                     Intent intent = new Intent("update-watch-face");
-                    intent.putExtra("message", theMessage);
+                    intent.putExtra(KEY_ONE, weatherId);
+                    intent.putExtra(KEY_TWO, high);
+                    intent.putExtra(KEY_THREE, low);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
                 }
             }
